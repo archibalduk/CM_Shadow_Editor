@@ -3,6 +3,8 @@
 // Qt headers
 #include <QCoreApplication>
 
+// Application headers
+#include "db_modules/database.h"
 
 /* ===================== */
 /*      Main Window      */
@@ -14,7 +16,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // Window title details
     this->setWindowTitle(QCoreApplication::applicationName() + " v" + QCoreApplication::applicationVersion());
-    this->setWindowIcon(QIcon("icon.ico"));
+    this->setWindowIcon(QIcon("application.ico"));
+
+    Database db;
+    db.open(this);
 }
 
 MainWindow::~MainWindow()

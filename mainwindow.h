@@ -10,6 +10,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    // Constructor
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 };
