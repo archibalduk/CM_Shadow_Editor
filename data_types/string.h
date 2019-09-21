@@ -18,6 +18,7 @@ public:
 
     // File I/O
     void read(QDataStream &stream, const quint16 &textLength);
+    void write(QDataStream &stream, const quint16 &textLength);
 
     // Get data
     QString get();
@@ -28,6 +29,7 @@ public:
     // Text lengths
     enum ENUM_TEXT_LENGTHS {
         MAX_INDEX_NAME = 50,
+        THREE_LETTER_LENGTH = 4,
         SHORT_TEXT_LENGTH = 26,
         STANDARD_TEXT_LENGTH = 51,
         LONG_TEXT_LENGTH = 101

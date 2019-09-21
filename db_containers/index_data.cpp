@@ -1,16 +1,13 @@
 #include "index_data.h"
 
-// --- Static data --- //
-QVector<Index> IndexData::Data;
-qint8 IndexData::s_Header[INDEX_HEADER_SIZE];
-
 
 /* ============================== */
 /*      Index Database Table      */
 /* ============================== */
 
 // --- Default constructor --- //
-IndexData::IndexData()
+IndexData::IndexData() :
+    DatabaseContainer<Index, IndexModel>()
 {
 
 }
@@ -21,10 +18,9 @@ IndexData::IndexData()
 /* ================= */
 
 // --- Read all data --- //
-qint32 IndexData::read(QDataStream &in, Version &version)
+qint32 IndexData::read(QDataStream &in, Version &version, const qint32 &/*count*/)
 {
-    while(!in.atEnd())
-    {
+    while(!in.atEnd()) {
         Index tmp;
         tmp.read(in);
         Data.push_back(tmp);
@@ -33,6 +29,7 @@ qint32 IndexData::read(QDataStream &in, Version &version)
     // Set database version number
     version.set(findHighestVersion());
 
+    //return this->resetModel();
     return Data.size();
 }
 

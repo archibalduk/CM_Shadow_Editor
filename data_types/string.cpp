@@ -30,6 +30,16 @@ void String::read(QDataStream &stream, const quint16 &textLength)
     m_String.replace(0x0099, 0x2122); // Convert from EHM 200x/1 TM (trademark) to UTF symbol
 }
 
+// --- Write String to raw char --- //
+void String::write(QDataStream &stream, const quint16 &textLength)
+{
+    QByteArray ba(textLength, '\x00');
+    ba.replace(0, m_String.size(), m_String.toLatin1());
+
+    // Write raw data
+    stream.writeRawData(ba, textLength);
+}
+
 
 /* ================= */
 /*      Get Data     */

@@ -1,6 +1,13 @@
 #include "nation_data.h"
 
-NationData::NationData()
+
+/* =============================== */
+/*      Nation Database Table      */
+/* =============================== */
+
+// --- Default constructor --- //
+NationData::NationData() :
+    DatabaseContainer<Nation, NationModel>()
 {
 
 }

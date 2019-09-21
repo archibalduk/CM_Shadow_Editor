@@ -1,6 +1,13 @@
 #include "city_data.h"
 
-CityData::CityData()
+
+/* ============================= */
+/*      City Database Table      */
+/* ============================= */
+
+// --- Default constructor --- //
+CityData::CityData() :
+    DatabaseContainer<City, CityModel>()
 {
 
 }

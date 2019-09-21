@@ -1,6 +1,13 @@
 #include "stadium_data.h"
 
-StadiumData::StadiumData()
+
+/* ================================ */
+/*      Stadium Database Table      */
+/* ================================ */
+
+// --- Default constructor --- //
+StadiumData::StadiumData() :
+    DatabaseContainer<Stadium, StadiumModel>()
 {
 
 }

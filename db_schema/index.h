@@ -3,6 +3,7 @@
 
 // Qt headers
 #include <QDataStream>
+#include <QString>
 
 // Application headers
 #include "data_types/string.h"
@@ -27,6 +28,12 @@ public:
 
     // File I/O
     void read(QDataStream &in);
+    void write(QDataStream &out);
+
+    // Get data
+    QString getFileName();
+    qint32 getOffset();
+    qint32 getRecordCount();
 };
 
 #endif // INDEX_H

@@ -1,6 +1,13 @@
 #include "continent_data.h"
 
-ContinentData::ContinentData()
+
+/* ================================== */
+/*      Continent Database Table      */
+/* ================================== */
+
+// --- Default constructor --- //
+ContinentData::ContinentData() :
+    DatabaseContainer<Continent, ContinentModel>()
 {
 
 }

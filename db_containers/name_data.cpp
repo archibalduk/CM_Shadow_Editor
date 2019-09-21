@@ -1,6 +1,5 @@
-#include "first_name_data.h"
+#include "name_data.h"
 
-FirstNameData::FirstNameData()
-{
-
-}
+/* ============================= */
+/*      Name Database Table      */
+/* ============================= */

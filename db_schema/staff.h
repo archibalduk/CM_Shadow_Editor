@@ -3,55 +3,84 @@
 
 // Qt headers
 #include <QDataStream>
+#include <QString>
 
 // Application headers
+#include "../data_types/attribute.h"
+#include "../data_types/char.h"
 #include "../data_types/date.h"
+#include "../data_types/int.h"
+#include "../data_types/short.h"
+#include "../data_types/u_char.h"
+#include "../pointer/ptr_common_name.h"
+#include "../pointer/ptr_first_name.h"
+#include "../pointer/ptr_second_name.h"
+#include "../pointer/ptr_nation.h"
+#include "schema_base_class.h"
 
 // --- Staff Data --- //
-class Staff
+class Staff : public SchemaBaseClass
 {
 private:
+    // Extra data
+    QString m_DisplayText;
+
     // Database data
-    qint32 ID;
-    qint32 FirstNameId;
-    qint32 SecondNameId;
-    qint32 CommonNameId;
+    PtrFirstName FirstNameId;
+    PtrSecondName SecondNameId;
+    PtrCommonName CommonNameId;
     Date DateOfBirth;
-    qint16 YearOfBirth;
-    qint32 Nation;
-    qint32 SecondNation;
-    quint8 InternationalApps;
-    quint8 InternationalGoals;
-    qint32 NationContracted;
-    qint8 JobForNation;
+    Short YearOfBirth;
+    PtrNation Nation;
+    PtrNation SecondNation;
+    UChar InternationalApps;
+    UChar InternationalGoals;
+    Int NationContracted;
+    Char JobForNation;
     Date DateJoinedNation;
     Date ContractExpiresNation;
-    qint32 ClubContracted;
-    qint8 JobForClub;
+    Int ClubContracted;
+    Char JobForClub;
     Date DateJoinedClub;
     Date ContractExpiresClub;
-    qint32 EstimatedWage;
-    qint32 EstimatedValue;
-    qint8 Adaptability;
-    qint8 Ambition;
-    qint8 Determination;
-    qint8 Loyalty;
-    qint8 Pressure;
-    qint8 Professionalism;
-    qint8 Sportsmanship;
-    qint8 Temperament;
-    qint8 PlayingSquad;
-    qint8 Classification;
-    qint8 ClubValuation;
-    qint32 PlayerData;
-    qint32 Preferences; // Version 0x02 - New ptr type
-    qint32 NonPlayerData;
+    Int EstimatedWage;
+    Int EstimatedValue;
+    Attribute Adaptability;
+    Attribute Ambition;
+    Attribute Determination;
+    Attribute Loyalty;
+    Attribute Pressure;
+    Attribute Professionalism;
+    Attribute Sportsmanship;
+    Attribute Temperament;
+    Attribute PlayingSquad;
+    Attribute Classification;
+    Attribute ClubValuation;
+    Int PlayerData;
+    Int Preferences; // Version 0x02 - New ptr type
+    Int NonPlayerData;
 
     // Runtime data
-    qint8 EuroSquadFlag;
+    Char EuroSquadFlag;
+
+    // Friend classes
+    friend class StaffModel;
+    friend class StaffData;
+
+    // Set data
+    void setDisplayText();
+    void setIdentifier();
 
 public:
+    // Constructor
     Staff();
+
+    // File I/O
+    void read(QDataStream &in);
+    void write(QDataStream &out);
+
+    // Get data
+    QString getDisplayText();
 };
 
 #endif // STAFF_H

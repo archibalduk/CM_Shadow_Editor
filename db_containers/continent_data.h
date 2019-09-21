@@ -1,10 +1,16 @@
 #ifndef CONTINENT_DATA_H
 #define CONTINENT_DATA_H
 
+// Application headers
+#include "../db_schema/continent.h"
+#include "../model/continent_model.h"
+#include "database_container.h"
 
-class ContinentData
+// --- Continent database table --- //
+class ContinentData : public DatabaseContainer<Continent, ContinentModel>
 {
 public:
+    // Constructor
     ContinentData();
 };
 

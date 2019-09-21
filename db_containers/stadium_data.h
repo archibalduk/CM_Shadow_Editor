@@ -1,10 +1,16 @@
 #ifndef STADIUM_DATA_H
 #define STADIUM_DATA_H
 
+// Application headers
+#include "../db_schema/stadium.h"
+#include "../model/stadium_model.h"
+#include "database_container.h"
 
-class StadiumData
+// --- Stadium database table --- //
+class StadiumData : public DatabaseContainer<Stadium, StadiumModel>
 {
 public:
+    // Constructor
     StadiumData();
 };
 

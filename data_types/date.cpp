@@ -10,6 +10,41 @@ Date::Date() :
 
 
 /* ================== */
+/*      File I/O      */
+/* ================== */
+
+// --- Read --- //
+void Date::read(QDataStream &in)
+{
+    // Buffer
+    qint16 day;  // days from Jan 1st.
+    qint16 year;
+    qint32 isLeapYear;  // = 1 if year is a leapyear, 0 otherwise.
+
+    // Read SI data
+    in >> day >> year >> isLeapYear;
+
+    // Convert to QDate
+    this->set(day, year);
+}
+
+// --- Write --- //
+void Date::write(QDataStream &out)
+{
+    // Buffer
+    qint16 day;  // days from Jan 1st.
+    qint16 year;
+    qint32 isLeapYear;  // = 1 if year is a leapyear, 0 otherwise.
+
+    // Convert to QDate
+    this->toSIDate(day, year, isLeapYear);
+
+    // Write SI data
+    out << day << year << isLeapYear;
+}
+
+
+/* ================== */
 /*      Get Data      */
 /* ================== */
 
@@ -31,45 +66,6 @@ void Date::toSIDate(qint16 &day, qint16 &year, qint32 &isLeapYear) const
 qint16 Date::year()
 {
     return static_cast<qint16>(m_Date.year());
-}
-
-
-/* ============================== */
-/*      Operator Overloading      */
-/* ============================== */
-
-// --- Read data from a data stream --- //
-QDataStream & operator >>(QDataStream &in, Date &data)
-{
-    // Buffer
-    qint16 day;  // days from Jan 1st.
-    qint16 year;
-    qint32 isLeapYear;  // = 1 if year is a leapyear, 0 otherwise.
-
-    // Read SI data
-    in >> day >> year >> isLeapYear;
-
-    // Convert to QDate
-    data.set(day, year);
-
-    return in;
-}
-
-// --- Write data to a data stream --- //
-QDataStream & operator <<(QDataStream &out, const Date &data)
-{
-    // Buffer
-    qint16 day;  // days from Jan 1st.
-    qint16 year;
-    qint32 isLeapYear;  // = 1 if year is a leapyear, 0 otherwise.
-
-    // Convert to QDate
-    data.toSIDate(day, year, isLeapYear);
-
-    // Write SI data
-    out << day << year << isLeapYear;
-
-    return out;
 }
 
 
