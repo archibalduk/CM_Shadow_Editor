@@ -38,6 +38,9 @@ public:
     // File I/O
     void read(QDataStream &in);
     void write(QDataStream &out);
+
+    // Get data
+    qint32 getParentId();
 };
 
 #endif // STAFF_COMP_HISTORY_H

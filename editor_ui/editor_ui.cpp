@@ -17,8 +17,11 @@ const QString EditorUi::s_TextBasicData = tr("Basic Data");
 /* ========================================== */
 
 // --- Default constructor --- //
-EditorUi::EditorUi(const QString &title, MainUi *ui, QSortFilterProxyModel *proxy, const qint32 &displayColumn) :
-    QWidget(ui->getParent())
+EditorUi::EditorUi(const QString &title, MainUi *ui,
+                   QSortFilterProxyModel *proxy, DatabaseTransfer *databaseTransfer,
+                   const qint32 &displayColumn) :
+    QWidget(ui->getParent()),
+    m_DatabaseTransfer(databaseTransfer)
 {    
     // User interface
     this->setUserInterface();
@@ -29,6 +32,38 @@ EditorUi::EditorUi(const QString &title, MainUi *ui, QSortFilterProxyModel *prox
 
     // Model/Proxy
     this->setModel(proxy, displayColumn);
+}
+
+
+/* ======================= */
+/*      Data Transfer      */
+/* ======================= */
+
+// --- Export all data --- //
+bool EditorUi::onExportAllData()
+{
+    if(m_DatabaseTransfer == nullptr)
+        return false;
+    else
+        return m_DatabaseTransfer->exportData();
+}
+
+// --- Export filtered data --- //
+bool EditorUi::onExportFilteredData()
+{
+    if(m_DatabaseTransfer == nullptr)
+        return false;
+    else
+        return m_DatabaseTransfer->exportData(m_Proxy);
+}
+
+// --- Import data --- //
+bool EditorUi::onImportData()
+{
+    if(m_DatabaseTransfer == nullptr)
+        return false;
+
+    return false;
 }
 
 
@@ -165,10 +200,13 @@ void EditorUi::setHeadingArea()
 
     // Display text/title
     m_LabelDisplayText = new Label(m_HeadingArea, Label::TITLE);
+    m_LabelDisplayText->setObjectName("Heading_Text");
 
     // Record id
     QLabel *labelRecordId = new QLabel("Id:", m_HeadingArea);
+    labelRecordId->setObjectName("SubHeading_Text");
     m_LabelRecordId = new Label(m_HeadingArea, Label::STANDARD);
+    m_LabelRecordId->setObjectName("SubHeading_Text");
 
     // Layout
     QGridLayout *layout = new QGridLayout(m_HeadingArea);
@@ -178,11 +216,40 @@ void EditorUi::setHeadingArea()
     m_HeadingArea->setLayout(layout);
 }
 
+// --- Set tools area --- //
+void EditorUi::setToolsArea()
+{
+    m_ToolsArea = new QWidget(this);
+    m_ToolBar = new QToolBar(m_ToolsArea);
+
+    m_ActionExportAllData = new QAction("Export All Data", m_ToolBar);
+    QObject::connect(m_ActionExportAllData, &QAction::triggered,
+                     this, &EditorUi::onExportAllData);
+    m_ToolBar->addAction(m_ActionExportAllData);
+
+    m_ActionExportFilteredData = new QAction("Export Current Filter", m_ToolBar);
+    QObject::connect(m_ActionExportFilteredData, &QAction::triggered,
+                     this, &EditorUi::onExportFilteredData);
+    m_ToolBar->addAction(m_ActionExportFilteredData);
+
+    m_ActionImportData = new QAction("Import Data", m_ToolBar);
+    QObject::connect(m_ActionImportData, &QAction::triggered,
+                     this, &EditorUi::onImportData);
+    m_ToolBar->addAction(m_ActionImportData);
+
+    // Layout
+    QGridLayout *layout = new QGridLayout(m_ToolsArea);
+    layout->addWidget(m_ToolBar);
+}
+
 // --- Set user interface --- //
 void EditorUi::setUserInterface()
 {
     // Heading area
     this->setHeadingArea();
+
+    // Tools area
+    this->setToolsArea();
 
     // Navigation list
     m_NavigationList = new QListView(this);
@@ -199,10 +266,18 @@ void EditorUi::setUserInterface()
     // Main editor display area/tab widget
     m_EditorDisplay = new  QTabWidget(this);
 
+    /* Layout
+     * xx | 00      | 01        | 02
+     * 00 | NavList | Heading   |
+     * 01 | NavList | EditorDisp|
+     * 02 | NavSrch | ToolsArea |
+     */
+
     // Layout
     QGridLayout *layout = new QGridLayout(this);
+    layout->addWidget(m_NavigationList, 0, 0, 2, 1);
     layout->addWidget(m_HeadingArea, 0, 1);
     layout->addWidget(m_EditorDisplay, 1, 1);
-    layout->addWidget(m_NavigationSearch, 0, 2);
-    this->setLayout(layout);
+    //layout->addWidget(m_NavigationSearch, 2, 0);
+    layout->addWidget(m_ToolsArea, 2, 1);
 }

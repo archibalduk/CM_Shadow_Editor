@@ -12,6 +12,10 @@ class ContinentData : public DatabaseContainer<Continent, ContinentModel>
 public:
     // Constructor
     ContinentData();
+
+private:
+    // Sort data
+    void sortData() { return; }
 };
 
 #endif // CONTINENT_DATA_H

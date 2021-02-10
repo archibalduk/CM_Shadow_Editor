@@ -50,10 +50,13 @@ QVariant ShadowGroupModel::data(const QModelIndex &index, qint32 role) const
 
     return QVariant();
 }
-
+#include <QDebug>
 QVector<ShadowEditItem> *ShadowGroupModel::editItems(const qint32 &row)
-{
-    return &m_Data[row].m_Items;
+{qDebug() << "ShadowGroupModel::editItems" << row;
+    if(row >= 0 && row < m_Data.size())
+        return &m_Data[row].m_Items;
+    else
+        return nullptr;
 }
 
 QVariant ShadowGroupModel::findEditItem(const qint32 &row, const QModelIndex &index)

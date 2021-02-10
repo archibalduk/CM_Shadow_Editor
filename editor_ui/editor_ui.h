@@ -8,9 +8,11 @@
 #include <QSortFilterProxyModel>
 #include <QString>
 #include <QTabWidget>
+#include <QToolBar>
 #include <QWidget>
 
 // Application headers
+#include "../db_transfer/city_transfer.h"
 #include "../ui/main_ui.h"
 #include "outputs/label.h"
 
@@ -23,9 +25,14 @@ class EditorUi : public QWidget
 {
 public:
     // Constructor
-    EditorUi(const QString &title, MainUi *parent, QSortFilterProxyModel*proxy, const qint32 &displayColumn = 0);
+    EditorUi(const QString &title, MainUi *parent,
+             QSortFilterProxyModel*proxy, DatabaseTransfer *databaseTransfer,
+             const qint32 &displayColumn = 0);
 
 protected:
+    // Database transfer
+    DatabaseTransfer *m_DatabaseTransfer;
+
     // Mapper
     QDataWidgetMapper *m_Mapper;
 
@@ -39,9 +46,15 @@ protected:
     // Strings
     static const QString s_TextBasicData;
 
-    // User interface (members)
-    QWidget *m_HeadingArea;
+    // User interface: Editor display
     QTabWidget *m_EditorDisplay;
+
+    // User interface: Heading
+    QWidget *m_HeadingArea;
+
+    // User interface: Tools
+    QWidget *m_ToolsArea;
+    QToolBar *m_ToolBar;
 
     // User interface (functions)
     void addScreen(QWidget *screen, const QString &title);
@@ -54,7 +67,12 @@ protected:
             container.push_back(new T(this));
     }
 
-protected slots:    
+protected slots:
+    // Data transfer
+    bool onExportAllData();
+    bool onExportFilteredData();
+    bool onImportData();
+
     // Model
     void modelResetCommenced();
     void modelResetComplete();
@@ -71,6 +89,11 @@ protected slots:
     void onProxyChanged(const QModelIndex & index);
 
 private:
+    // Actions
+    QAction *m_ActionExportAllData;
+    QAction *m_ActionExportFilteredData;
+    QAction *m_ActionImportData;
+
     // Labels
     Label *m_LabelDisplayText;
     Label *m_LabelRecordId;
@@ -80,6 +103,7 @@ private:
 
     // User interface
     void setHeadingArea();
+    void setToolsArea();
     void setUserInterface();
 };
 

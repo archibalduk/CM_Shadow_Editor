@@ -45,3 +45,21 @@ void StaffComp::write(QDataStream &out)
     BackgroundColour.write(out);
     Reputation.write(out);
 }
+
+
+/* ================ */
+/*      History     */
+/* ================ */
+
+// --- Add history --- //
+void StaffComp::addHistory(const StaffCompHistory &history)
+{
+    History.add(history);
+}
+
+// --- Write history --- //
+qint32 StaffComp::writeHistory(QDataStream &out, const bool &/*domestic*/)
+{
+    History.write(out);
+    return History.size();
+}

@@ -1,6 +1,7 @@
 #include "pointer_combo_edit.h"
 
 // Qt headers
+#include <QListView>
 #include <QModelIndex>
 #include <QModelIndexList>
 
@@ -18,6 +19,10 @@ PointerComboEdit::PointerComboEdit(QWidget *parent) :
     // Combo input
     m_Input = new QComboBox(this);
     this->addWidget(m_Input);
+
+    // Optimisation
+    QListView *view = static_cast<QListView*>(m_Input->view());
+    view->setUniformItemSizes(true);
 }
 
 
@@ -26,18 +31,22 @@ PointerComboEdit::PointerComboEdit(QWidget *parent) :
 /* ================== */
 
 // --- Set mapping --- //
-void PointerComboEdit::set(QDataWidgetMapper *mapper, const qint32 &fieldIndex, QSortFilterProxyModel *proxy)
+void PointerComboEdit::set(QDataWidgetMapper *mapper, const qint32 &fieldIndex, QSortFilterProxyModel *proxy, const bool &isValuePointer)
 {
+    // If this is a value pointer rather than a database pointer, update the _None / _Invalid threshold value to zero instead of -1
+    if(isValuePointer)
+        this->setNoneValue(0);
+
     // Primary key
     this->setPrimaryKeyMapping(mapper, fieldIndex);
 
     // Completer
-    QCompleter *completer = this->getCompleter(proxy);
+    this->setCompleter(proxy);
 
     // Input
     m_Input->setEditable(true);
     m_Input->setModel(proxy);
-    m_Input->setCompleter(completer);
+    m_Input->setCompleter(m_Completer);
     this->setInputWidgetPointer(m_Input);
 
     // Connections
@@ -63,7 +72,7 @@ void PointerComboEdit::onInputChange(const qint32 &row)
     QModelIndex pointerIndex = pointerModel->index(row, ModelBaseClassWrapper::Id);
     m_PrimaryKey->setText(pointerModel->data(pointerIndex).toString());
 
-    // Submit the change to the underlying mode
+    // Submit the change to the underlying model
     QAbstractItemModel *dataModel = m_Mapper->model();
     QModelIndex dataIndex = dataModel->index(m_Mapper->currentIndex(), m_Mapper->mappedSection(m_PrimaryKey));
     dataModel->setData(dataIndex, m_PrimaryKey->text());
@@ -83,13 +92,16 @@ void PointerComboEdit::onPrimaryKeyChange(const QString &id)
                                                    1,
                                                    Qt::MatchExactly);
 
-    if(list.size() < 1)
+    if(list.size() < 1) {
+        m_Input->clearEditText();
+        m_CheckBox->setChecked(false);
         return;
+    }
 
     m_Input->blockSignals(true);
     m_Input->setCurrentIndex(list[0].row());
     m_Input->blockSignals(false);
 
     // Update the checkbox
-    emit primaryKeyChanged(m_PrimaryKey->text().toInt() >= 0);
+    emit primaryKeyChanged(m_PrimaryKey->text().toInt() > m_NoneValue);
 }

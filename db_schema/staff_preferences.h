@@ -6,24 +6,29 @@
 
 // Application headers
 #include "../data_types/int.h"
+#include "../pointer/ptr_club.h"
+#include "../pointer/ptr_staff.h"
 #include "schema_base_class.h"
 
 // --- Staff Preference Data --- //
 class StaffPreferences : public SchemaBaseClass
 {
 private:
-    Int FavouriteClubs1;
-    Int FavouriteClubs2;
-    Int FavouriteClubs3;
-    Int DislikedClubs1;
-    Int DislikedClubs2;
-    Int DislikedClubs3;
-    Int FavouriteStaff1;
-    Int FavouriteStaff2;
-    Int FavouriteStaff3;
-    Int DislikedStaff1;
-    Int DislikedStaff2;
-    Int DislikedStaff3;
+    PtrClub FavouriteClubs1;
+    PtrClub FavouriteClubs2;
+    PtrClub FavouriteClubs3;
+    PtrClub DislikedClubs1;
+    PtrClub DislikedClubs2;
+    PtrClub DislikedClubs3;
+    PtrStaff FavouriteStaff1;
+    PtrStaff FavouriteStaff2;
+    PtrStaff FavouriteStaff3;
+    PtrStaff DislikedStaff1;
+    PtrStaff DislikedStaff2;
+    PtrStaff DislikedStaff3;
+
+    // Friend classes
+    friend class StaffModel;
 
 public:
     // Constructor

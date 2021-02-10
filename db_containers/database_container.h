@@ -4,35 +4,46 @@
 // Qt headers
 #include <QDataStream>
 #include <QSortFilterProxyModel>
+#include <QVector>
 
 // Application headers
 #include "../db_modules/version.h"
+#include "../db_transfer/database_transfer.h"
 #include "../model/model_base_class_wrapper.h"
 
 // --- Database container base class --- //
 template<typename T_Data, typename T_Model> class DatabaseContainer
 {
-public:    
-    // Database
-    QVector<T_Data> Data;
-
+private:
     // Model
     T_Model *m_Model;
     QSortFilterProxyModel *m_Proxy;
+
+public:
+    // Database
+    QVector<T_Data> Data;
+
+    // Database import/export
+    DatabaseTransfer *m_DatabaseTransfer;
+
+    // Domestic/international
+    qint32 m_PosFirstDomesticItem = 0;
+    qint32 m_PosFirstInternationalItem = 0;
 
 
     /* =========================== */
     /*      Database Container     */
     /* =========================== */
 
-    // Constructor
+    // --- Constructor --- //
     DatabaseContainer()
     {
         m_Model = nullptr;
         m_Proxy = nullptr;
+        m_DatabaseTransfer = nullptr;
     }
 
-    // Destructor
+    // --- Destructor --- //
     virtual ~DatabaseContainer()
     {
         if(m_Proxy != nullptr)
@@ -40,6 +51,42 @@ public:
 
         if(m_Model != nullptr)
             delete m_Model;
+
+        if(m_DatabaseTransfer != nullptr)
+            delete m_DatabaseTransfer;
+    }
+
+
+    /* ================================ */
+    /*      Database Import/Export      */
+    /* ================================ */
+
+    // --- Get database transfer class --- //
+    DatabaseTransfer *databaseTransfer()
+    {
+        return m_DatabaseTransfer;
+    }
+
+    /* ===================================== */
+    /*      Domestic/International Data      */
+    /* ===================================== */
+
+    // --- Set first international item value (sub-class this function for tables where there are international items) --- //
+    virtual void setFirstInternationalItem()
+    {
+        m_PosFirstInternationalItem = Data.size();
+    }
+
+    // --- Flag next items to be read/written as domestic (empty wrapper function) --- //
+    virtual void setNextItemsAsDomestic()
+    {
+        return;
+    }
+
+    // --- Flag next items to be read/written as international (empty wrapper function) --- //
+    virtual void setNextItemsAsInternational()
+    {
+        return;
     }
 
 
@@ -53,11 +100,15 @@ public:
         // Begin model reset
         this->model()->beginReset();
 
+        // Count initial number of items in container
+        const qint32 initialSize = Data.size();
+
         // Read entire file
         if(count < 0) {
             while(!in.atEnd()) {
                 T_Data tmp;
                 tmp.read(in);
+                tmp.syncIdCache();
                 Data.push_back(tmp);
             }
         }
@@ -65,27 +116,50 @@ public:
         else {
             for(qint32 i = 0; i < count; ++i) {
                 T_Data tmp;
-                tmp.read(in);                
+                tmp.read(in);
+                tmp.syncIdCache();
                 Data.push_back(tmp);
             }
         }
 
         // End model reset
         this->model()->endReset();
-        return Data.size();
+        return Data.size() - initialSize;   // Return number of items read
     }
 
     // --- Write all data --- //
-    virtual qint32 write(QDataStream &out)
+    virtual qint32 write(QDataStream &out, const bool &domestic = true)
     {
-        const qint32 size = Data.size();
+        qint32 first = 0;
+        qint32 last = Data.size();
 
-        for(qint32 i = 0; i < size; ++i) {
+        // Adjust first/last according to whether domestic or international (if applicable)
+        this->setFirstInternationalItem();
+
+        if(domestic) // Domestic -> Last should point to the element after the last domestic element. The first is the first in the QVector
+            last = m_PosFirstInternationalItem;
+        else // International -> First should point to the first international element. The last is the last in the QVector
+            first = m_PosFirstInternationalItem;
+
+        for(qint32 i = first; i < last; ++i) {
+            Data[i].syncIdCache();
             Data[i].write(out);
         }
 
-        return size;
+        return last - first;
     }
+
+
+    /* ================= */
+    /*      Get Data     */
+    /* ================= */
+
+    // --- Row count --- //
+    qint32 size()
+    {
+        return Data.size();
+    }
+
 
     /* =============== */
     /*      Model      */
@@ -121,6 +195,39 @@ public:
         this->model()->insertRows(0, size);
         return size;
     }
+
+
+    /* ================== */
+    /*      Sort Data     */
+    /* ================== */
+
+    // --- Re-number the IDs --- //
+    void renumber()
+    {
+        const qint32 size = Data.size();
+        for(qint32 i = 0; i < size; ++i) {
+            Data[0].syncIdCache();
+            Data[0].ID.set(i);
+        }
+    }
+
+    // --- Sort data --- //
+    void sort()
+    {
+        // Begin model reset
+        this->model()->beginReset();
+
+        // Sort and renumber data
+        this->sortData();
+        this->renumber();
+
+        // End model reset
+        this->model()->endReset();
+    }
+
+protected:
+    // --- Sort the data --- //
+    virtual void sortData() = 0;
 };
 
 #endif // DATABASE_CONTAINER_H

@@ -8,7 +8,9 @@
 // --- Default constructor --- //
 Staff::Staff()
 {
-
+    FirstNameText.setCapacity(String::STANDARD_TEXT_LENGTH);
+    SecondNameText.setCapacity(String::STANDARD_TEXT_LENGTH);
+    CommonNameText.setCapacity(String::STANDARD_TEXT_LENGTH);
 }
 
 
@@ -50,14 +52,15 @@ void Staff::read(QDataStream &in)
     PlayingSquad.read(in);
     Classification.read(in);
     ClubValuation.read(in);
-    PlayerData.read(in);
-    Preferences.read(in); // Version 0x02 - New ptr type
-    NonPlayerData.read(in);
+    PlayerData_Id.read(in);
+    Preferences_Id.read(in); // Version 0x02 - New ptr type
+    NonPlayerData_Id.read(in);
 
     // Runtime data
     EuroSquadFlag.read(in);
 
     // Set data
+    this->setNameCache();
     this->setDisplayText();
     this->setIdentifier();
 }
@@ -96,9 +99,9 @@ void Staff::write(QDataStream &out)
     PlayingSquad.write(out);
     Classification.write(out);
     ClubValuation.write(out);
-    PlayerData.write(out);
-    Preferences.write(out); // Version 0x02 - New ptr type
-    NonPlayerData.write(out);
+    PlayerData_Id.write(out);
+    Preferences_Id.write(out); // Version 0x02 - New ptr type
+    NonPlayerData_Id.write(out);
 
     // Runtime data
     EuroSquadFlag.write(out);
@@ -116,6 +119,24 @@ QString Staff::getDisplayText()
 }
 
 
+/* ================ */
+/*      History     */
+/* ================ */
+
+// --- Add history --- //
+void Staff::addHistory(const StaffHistory &history)
+{
+    History.add(history);
+}
+
+// --- Write history --- //
+qint32 Staff::writeHistory(QDataStream &out, const bool &/*domestic*/)
+{
+    History.write(out);
+    return History.size();
+}
+
+
 /* ================== */
 /*      Set Data      */
 /* ================== */
@@ -125,9 +146,9 @@ void Staff::setDisplayText()
 {
     // For performance reasons, it is much quicker to set the Display Text rather than to generate it dynamically
     //if(CommonNameId.isNone())
-        m_DisplayText = QString("%1, %2").arg(SecondNameId.getText()).arg(FirstNameId.getText());
+        m_DisplayText = QString("%1, %2").arg(SecondNameText.get()).arg(FirstNameText.get());
     //else
-        //m_DisplayText = CommonNameId.getText();
+        //m_DisplayText = CommonNameText.get();
 }
 
 // --- Identifier --- //
@@ -135,5 +156,13 @@ void Staff::setIdentifier()
 {
     // This should be set when the record is initially created and then left as is because it will then be used to track all edits
     // regardless of what changes might be made to the person's name or date of birth
-    m_Identifier = QString("%1 %2").arg(FirstNameId.getText()).arg(SecondNameId.getText());
+    m_Identifier = QString("%1 %2").arg(FirstNameText.get()).arg(SecondNameText.get());
+}
+
+// --- Cache names --- //
+void Staff::setNameCache()
+{
+    FirstNameText.set(FirstNameId.getText());
+    SecondNameText.set(SecondNameId.getText());
+    CommonNameText.set(CommonNameId.getText());
 }

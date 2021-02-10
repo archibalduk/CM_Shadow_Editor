@@ -13,6 +13,7 @@
 
 // Database headers
 #include "../db_containers/database_container.h"
+#include "../db_containers/simple_container.h"
 #include "../db_containers/city_data.h"
 #include "../db_containers/club_comp_data.h"
 #include "../db_containers/club_data.h"
@@ -39,13 +40,25 @@ class Database : public QObject
 private:
     // File I/O - Read
     bool openDatabase(const QString &path);
-    template<typename T1, typename T2>  bool read(ProgressDialog *progress, const QString &path, const QString &fileName,
-                                                  DatabaseContainer<T1, T2> *container, const qint32 &offset = 0, const qint32 &count = -1);
+    template<typename T1, typename T2> bool read(ProgressDialog *progress, const QString &path, const QString &fileName,
+                                                 DatabaseContainer<T1, T2> &container,
+                                                 const qint32 &offset = 0, const qint32 &count = -1);
+    template<typename T1, typename T2> bool read(ProgressDialog *progress, const QString &path,
+                                                 const QString &fileNameDomestic, const QString &fileNameInternational,
+                                                 DatabaseContainer<T1, T2> &container,
+                                                 const qint32 &offset = 0, const qint32 &count = -1);
+    template<typename T> bool read(ProgressDialog *progress, const QString &path, const QString &fileName,
+                                   SimpleContainer<T> &container, const qint32 &offset = 0, const qint32 &count = -1);
 
     // File I/O - Write
     bool saveDatabase(const QString &path);
-    template<typename T1, typename T2>  bool write(ProgressDialog *progress, const QString &path, const QString &fileName,
-                                                  DatabaseContainer<T1, T2> *container, const bool &truncateFile = true);
+    template<typename T1, typename T2> bool write(ProgressDialog *progress, const QString &path, const QString &fileName,
+                                                   DatabaseContainer<T1, T2> &container, const qint32 &tableId =-1,
+                                                   const bool &domestic = true);
+    template<typename T> bool write(ProgressDialog *progress, const QString &path, const QString &fileName,
+                                    T &container, qint32 (T::*fnWrite)(QDataStream &, const bool &),
+                                    const QIODevice::OpenModeFlag &method,
+                                    const qint32 &tableId, const bool &domestic = true);
 
     // Version
     Version m_Version;

@@ -12,6 +12,16 @@ class ClubData : public DatabaseContainer<Club, ClubModel>
 public:
     // Constructor
     ClubData();
+
+    // Domestic/international data
+    void setFirstInternationalItem();
+    void setNextItemsAsDomestic();
+    void setNextItemsAsInternational();
+
+private:
+    // Sort data
+    void sortData();
+    static bool sortMethod(const Club &a, const Club &b);
 };
 
 #endif // CLUB_DATA_H

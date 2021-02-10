@@ -15,6 +15,10 @@ template<typename T> class NameData : public DatabaseContainer<Name, T>
 public:
     // Constructor
     NameData() : DatabaseContainer<Name, T>() {}
+
+private:
+    // Sort data
+    void sortData() { return; }
 };
 
 #endif // FIRST_NAME_DATA_H

@@ -1,11 +1,15 @@
 #include "club_comp.h"
 
+// --- Static data --- //
+bool ClubComp::s_NextItemIsDomestic = true; // Flags whether the next item to be read/written is domestic or international
+
 /* =========================== */
 /*      Club Competitions      */
 /* =========================== */
 
 // --- Default constructor -- //
-ClubComp::ClubComp()
+ClubComp::ClubComp() :
+    m_IsDomestic(s_NextItemIsDomestic)
 {
 
 }
@@ -49,4 +53,26 @@ void ClubComp::write(QDataStream &out)
     ForegroundColour.write(out);
     BackgroundColour.write(out);
     Reputation.write(out);
+}
+
+
+/* ================ */
+/*      History     */
+/* ================ */
+
+// --- Add history --- //
+void ClubComp::addHistory(const ClubCompHistory &history)
+{
+    History.add(history);
+}
+
+// --- Write history --- //
+qint32 ClubComp::writeHistory(QDataStream &out, const bool &domestic)
+{
+    if(m_IsDomestic == domestic) {
+        History.write(out);
+        return History.size();
+    }
+
+    return 0;
 }

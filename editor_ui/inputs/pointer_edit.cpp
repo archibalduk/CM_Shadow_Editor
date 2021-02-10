@@ -1,12 +1,17 @@
 #include "pointer_edit.h"
 
+// Qt headers
+#include <QListView>
+#include <QSettings>
+
 /* ======================== */
 /*      Pointer Editor      */
 /* ======================== */
 
 // --- Default constructor --- //
 PointerEdit::PointerEdit(QWidget *parent) :
-    InputBaseClass(parent)
+    InputBaseClass(parent),
+    m_NoneValue(-1)
 {
     // Primary key input (usually hidden from the user)
     m_PrimaryKey = new QLineEdit(this);
@@ -16,6 +21,17 @@ PointerEdit::PointerEdit(QWidget *parent) :
 
     // Checkbox
     m_CheckBox = new QCheckBox(this);
+
+    // Show/hide the primary key input depending on whether debug mode is enabled
+    QSettings settings;
+
+    if(settings.value("debug_mode", false).toBool()) {
+        m_PrimaryKey->setHidden(false);
+        m_Label->setFixedWidth(m_Label->width() - (this->widthHiddenField() + 5));
+    }
+    else {
+        m_PrimaryKey->setHidden(true);
+    }
 
     QObject::connect(this, &PointerEdit::primaryKeyChanged,
                      m_CheckBox, &QCheckBox::setChecked);
@@ -35,7 +51,7 @@ void PointerEdit::onCheckBoxStateChange(const qint32 &state)
     m_InputWidgetPointer->setEnabled(isChecked);
 
     if(!isChecked) {
-        m_PrimaryKey->setText(QString::number(-1));
+        m_PrimaryKey->setText(QString::number(m_NoneValue));
 
         // Submit the change to the underlying mode
         QAbstractItemModel *dataModel = m_Mapper->model();
@@ -49,14 +65,18 @@ void PointerEdit::onCheckBoxStateChange(const qint32 &state)
 /*      Initialisation      */
 /* ======================== */
 
-// --- Get/init completer --- //
-QCompleter *PointerEdit::getCompleter(QSortFilterProxyModel *proxy)
+// --- Set/init completer --- //
+void PointerEdit::setCompleter(QSortFilterProxyModel *proxy)
 {
-    QCompleter *completer = new QCompleter(proxy, this);
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
-    completer->setCompletionMode(QCompleter::InlineCompletion);
-    completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
-    return completer;
+    m_Completer = new QCompleter(proxy, this);
+    m_Completer->setCaseSensitivity(Qt::CaseInsensitive);
+    m_Completer->setCompletionMode(QCompleter::PopupCompletion);
+    m_Completer->setFilterMode(Qt::MatchContains);
+    m_Completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+
+    // Optimisation
+    QListView *view = static_cast<QListView*>(m_Completer->popup());
+    view->setUniformItemSizes(true);
 }
 
 // --- Set pointer to input widget --- //
@@ -79,7 +99,7 @@ void PointerEdit::setInputWidgetPointer(QWidget *input)
 // --- On mapper current index change --- //
 void PointerEdit::onCurrentIndexChange(const qint32 &)
 {
-    const bool isValid = (m_PrimaryKey->text().toInt() >= 0);
+    const bool isValid = (m_PrimaryKey->text().toInt() > m_NoneValue);
 
     m_CheckBox->blockSignals(true);
     m_CheckBox->setChecked(isValid);
@@ -91,6 +111,13 @@ void PointerEdit::onCurrentIndexChange(const qint32 &)
 /* ================== */
 /*      Set data      */
 /* ================== */
+
+// --- Set the value which indicates _None or _Invalid --- //
+void PointerEdit::setNoneValue(const qint32 &value)
+{
+    // Usually this value is -1 for database pointers and 0 for value pointers
+    m_NoneValue = value;
+}
 
 // --- Set primary key mapping --- //
 void PointerEdit::setPrimaryKeyMapping(QDataWidgetMapper *mapper, const qint32 &fieldIndex)

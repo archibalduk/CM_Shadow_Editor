@@ -7,14 +7,14 @@
 
 // Application headers
 #include "data_types/string.h"
+#include "schema_base_class.h"
 
 // --- Index.dat --- //
-class Index
+class Index : public SchemaBaseClass
 {
 private:
     // Database data
     String  Filename;
-    qint32  FileId;
     qint32  TableSize;
     qint32  Offset;
     qint32  Version;

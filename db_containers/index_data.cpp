@@ -20,6 +20,11 @@ IndexData::IndexData() :
 // --- Read all data --- //
 qint32 IndexData::read(QDataStream &in, Version &version, const qint32 &/*count*/)
 {
+    // Header
+    m_Header.resize(INDEX_HEADER_SIZE);
+    in.readRawData(m_Header.data(), INDEX_HEADER_SIZE);
+
+    // Records
     while(!in.atEnd()) {
         Index tmp;
         tmp.read(in);
@@ -33,6 +38,35 @@ qint32 IndexData::read(QDataStream &in, Version &version, const qint32 &/*count*
     return Data.size();
 }
 
+// --- Write all data --- //
+qint32 IndexData::write(QDataStream &out, const bool &/*domestic*/)
+{
+    // Header
+    out.writeRawData(m_Header, INDEX_HEADER_SIZE);
+
+    // Records
+    const qint32 size = Data.size();
+    for(qint32 i = 0; i < size; ++i) {
+        Data[i].write(out);
+    }
+
+    return size;
+}
+
+
+/* ================= */
+/*      Set Data     */
+/* ================= */
+
+// --- Set count (and offset) --- //
+void IndexData::setCount(const qint32 &tableId, const qint32 &count, const qint32 &offset)
+{
+    if(tableId < 0 || tableId >= INDEX_TABLE_COUNT)
+        return;
+
+    Data[tableId].TableSize = count;
+    Data[tableId].Offset = offset;
+}
 
 /* ================ */
 /*      Version     */

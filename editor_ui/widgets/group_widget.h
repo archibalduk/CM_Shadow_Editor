@@ -24,7 +24,7 @@ private:
 
 public:
     // Constructor
-    GroupWidget(const QString &title, QWidget *parent, const qint32 &limit = 99);
+    GroupWidget(const QString &title, QWidget *parent, const qint32 &limit = 14);
 
     // Set data
     void add(QWidget *widget);

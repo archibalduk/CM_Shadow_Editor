@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="cities.png">icons/cities.png</file>
+        <file alias="colours.png">icons/colours.png</file>
+        <file alias="players_and_staff.png">icons/players_and_staff.png</file>
+    </qresource>
+</RCC>

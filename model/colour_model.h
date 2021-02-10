@@ -14,10 +14,18 @@ public:
 
     // Data
     QVariant data(const QModelIndex &index, qint32 role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant & value, qint32 role = Qt::EditRole) Q_DECL_OVERRIDE;
+
+    // Header
+    QVariant headerData(qint32 section, Qt::Orientation orientation, qint32 role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     // Columns
     enum ENUM_COLUMNS {
-        InsertRowsHere = FIRST_ITEM,
+        Name = FIRST_ITEM,
+        HexCode,
+        RedIntensity,
+        GreenIntensity,
+        BlueIntensity,
         COLUMN_COUNT
     };
 };

@@ -1,9 +1,9 @@
 #include "shadow_edit_item_model.h"
-
+#include <QDebug>
 ShadowEditItemModel::ShadowEditItemModel(QObject *parent) :
     QAbstractTableModel(parent),
     m_Data(nullptr)
-{
+{qDebug() << "Address" << nullptr << &m_Data << m_Data;
 
 }
 
@@ -15,13 +15,18 @@ qint32 ShadowEditItemModel::columnCount(const QModelIndex &) const
 qint32 ShadowEditItemModel::rowCount(const QModelIndex &) const
 {
     if(m_Data != nullptr)
-        return m_Data->size();
+        return m_Data->size(); /* THIS LINE IS CAUSING A CRASH */
     else
         return 0;
 }
 
 QVariant ShadowEditItemModel::data(const QModelIndex &index, qint32 role) const
 {
+    if(m_Data == nullptr || m_Data->size() < 1){    /* ATTEMPT AT FIXING CRASH */
+        qDebug() << "ShadowEditItemModel::data";
+        return QVariant();
+    }
+
     ShadowEditItem *i = &(*m_Data)[index.row()];
 
     if(role == Qt::DisplayRole || role == Qt::EditRole) {

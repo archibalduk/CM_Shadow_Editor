@@ -55,3 +55,14 @@ void StaffCompHistory::write(QDataStream &out)
     ThirdPlacedIndex.write(out);
     ThirdPlacedInfo.write(out);
 }
+
+
+/* ================= */
+/*      Get Data     */
+/* ================= */
+
+// --- Parent/owner id --- //
+qint32 StaffCompHistory::getParentId()
+{
+    return StaffComp.get();
+}

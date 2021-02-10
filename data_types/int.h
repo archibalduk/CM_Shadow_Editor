@@ -22,10 +22,13 @@ public:
 
     // Get data
     qint32 get() const;
+    bool isPointer() const;
     const QVariant variant() const;
 
     // Set data
+    void copy(const Int &data);
     void set(const QVariant &data);
+    void set(const qint32 &i);
 };
 
 #endif // INT_H

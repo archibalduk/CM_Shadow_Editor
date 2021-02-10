@@ -11,7 +11,7 @@ ScreenWidget::ScreenWidget(QWidget *parent) :
     // Layout
     l = new QGridLayout(this);
     l->setAlignment(Qt::AlignTop);
-    l->setContentsMargins(0,0,0,0);
+    l->setSpacing(10);
 }
 
 // --- Set layout (should be called once all items have been added to the layout --- //

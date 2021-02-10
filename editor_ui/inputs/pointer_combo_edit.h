@@ -25,7 +25,7 @@ public:
     PointerComboEdit(QWidget *parent);
 
     // Set data
-    void set(QDataWidgetMapper *mapper, const qint32 &fieldIndex, QSortFilterProxyModel *proxy);
+    void set(QDataWidgetMapper *mapper, const qint32 &fieldIndex, QSortFilterProxyModel *proxy, const bool &isValuePointer = false);
 };
 
 #endif // POINTER_COMBO_EDIT_H

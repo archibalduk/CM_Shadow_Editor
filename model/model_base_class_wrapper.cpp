@@ -1,12 +1,5 @@
 #include "model_base_class_wrapper.h"
 
-// --- Common text strings --- //
-const QString ModelBaseClassWrapper::s_DisplayText = tr("Display Text");
-const QString ModelBaseClassWrapper::s_GenderName = tr("Gender");
-const QString ModelBaseClassWrapper::s_Id = tr("Id");
-const QString ModelBaseClassWrapper::s_Name = tr("Name");
-const QString ModelBaseClassWrapper::s_Nation = tr("Nation");
-
 
 /* ================================== */
 /*      Model Base Class Wrapper      */
@@ -116,7 +109,7 @@ bool ModelBaseClassWrapper::validate(const QModelIndex &index, const QVariant &v
     // Return false if the underlying data may not be updated
 
     // Abort if the EditRole is not used
-    if(role != Qt::EditRole)
+    if(role != Qt::EditRole && role != SpreadsheetRole)
         return false;
 
     // Check whether any change has actually been made (i.e. whether the new value is any different to the existing value --- //

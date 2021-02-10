@@ -31,6 +31,12 @@ QVariant ClubModel::data(const QModelIndex &index, qint32 role) const
         switch(col) {
 
         case DisplayText:
+            return i->Name.get();
+
+        case Identifier:
+            return QVariant();
+
+        case Id:
             return i->ID.get();
 
         }

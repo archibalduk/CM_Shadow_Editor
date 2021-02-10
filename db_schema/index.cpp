@@ -1,12 +1,14 @@
 #include "index.h"
 
+// Qt headers
+#include <QDebug>
+
 /* ==================== */
 /*      Index Data      */
 /* ==================== */
 
 // --- Default constructor --- //
 Index::Index() :
-    FileId(0),
     TableSize(0),
     Offset(0),
     Version(0)
@@ -23,14 +25,20 @@ Index::Index() :
 void Index::read(QDataStream &in)
 {
     Filename.read(in, String::STANDARD_TEXT_LENGTH);
-    in >> FileId >> TableSize >> Offset >> Version;
+    ID.read(in);
+    in >> TableSize >> Offset >> Version;
+
+    qDebug() << Filename.get() << TableSize << Offset << Version;
 }
 
 // --- Write data --- //
 void Index::write(QDataStream &out)
 {
     Filename.write(out, String::STANDARD_TEXT_LENGTH);
-    out << FileId << TableSize << Offset << Version;
+    ID.write(out);
+    out << TableSize << Offset << Version;
+
+    qDebug() << Filename.get() << TableSize << Offset << Version;
 }
 
 

@@ -83,6 +83,10 @@ private:
     Int TacticSelected;
     Char HasLinkedClub;
 
+    // Flags
+    bool m_IsDomestic;
+    static bool s_NextItemIsDomestic;
+
     // Friend classes
     friend class ClubData;
     friend class ClubModel;

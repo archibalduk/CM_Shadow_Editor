@@ -23,7 +23,7 @@ private slots:
 private:
     // Model
     ShadowEditItemModel *m_ShadowEditItemModel;
-    QSortFilterProxyModel *m_ShadowEditItemProxy;
+    //QSortFilterProxyModel *m_ShadowEditItemProxy;
 
     // Screens
     void initScreenBasicData();

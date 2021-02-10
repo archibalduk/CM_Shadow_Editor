@@ -4,6 +4,7 @@
 // Qt headers
 #include <QAction>
 #include <QMainWindow>
+#include <QMenu>
 #include <QObject>
 #include <QStackedWidget>
 #include <QToolBar>
@@ -52,6 +53,7 @@ public:
 
     // Add items
     void addButton(QAction *action, const qint8 &behaviour);
+    void addMenu(QMenu *menu);
     void addWidget(QAction *action, QWidget *mainWidget, QWidget *sideBarWidget, const qint8 &behaviour);
 
     // Behaviour flags

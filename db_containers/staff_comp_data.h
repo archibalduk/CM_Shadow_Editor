@@ -12,6 +12,11 @@ class StaffCompData : public DatabaseContainer<StaffComp, StaffCompModel>
 public:
     // Constructor
     StaffCompData();
+
+private:
+    // Sort data
+    void sortData();
+    static bool sortMethod(const StaffComp &a, const StaffComp &b);
 };
 
 #endif // STAFF_COMP_DATA_H

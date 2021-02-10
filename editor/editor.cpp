@@ -11,6 +11,7 @@ Editor::Editor(MainUi *ui) :
 {
     // Initialise editors
     m_EditorCity = new EditorCity(ui);
+    m_EditorColour = new EditorColour(ui);
     m_EditorStaff = new EditorStaff(ui);
 
     // Initialise shadow editor/viewer

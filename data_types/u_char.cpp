@@ -53,5 +53,8 @@ const QVariant UChar::variant() const
 // --- Set from QVariant --- //
 void UChar::set(const QVariant &data)
 {
-    value = static_cast<quint8>(data.toInt());
+    const qint32 tmp = data.toInt();
+
+    if(tmp >=0 && tmp <= 255)
+        value = static_cast<quint8>(tmp);
 }

@@ -5,9 +5,10 @@
 #include <QHBoxLayout>
 
 // --- Static data: Widths --- //
-qint32 InputBaseClass::s_WidthHiddenField = 20;
+qint32 InputBaseClass::s_WidthHiddenField = 50;
 qint32 InputBaseClass::s_WidthInput = 150;
 qint32 InputBaseClass::s_WidthLabel = 150;
+qint32 InputBaseClass::s_WidthSpinBox = 50;
 
 
 /* ========================== */
@@ -24,6 +25,7 @@ InputBaseClass::InputBaseClass(QWidget *parent) :
 
     // Layout
     QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setAlignment(Qt::AlignLeft);
     layout->addWidget(m_Label);
     this->setLayout(layout);
 }
@@ -51,6 +53,12 @@ qint32 InputBaseClass::widthLabel()
     return s_WidthLabel;
 }
 
+// --- Get width: Spinbox field --- //
+qint32 InputBaseClass::widthSpinBox()
+{
+    return s_WidthSpinBox;
+}
+
 
 /* ================== */
 /*      Set Data      */
@@ -62,6 +70,17 @@ void InputBaseClass::setLabel(QDataWidgetMapper *mapper, const qint32 &fieldInde
     m_Label->setText(QString("%1:")
                      .arg(mapper->model()->headerData(fieldIndex, Qt::Horizontal).toString())
                      );
+}
+
+
+/* ================= */
+/*      Signals      */
+/* ================= */
+
+// --- On input change --- //
+void InputBaseClass::onChange(const QString &text)
+{
+    emit changed(text);
 }
 
 

@@ -12,6 +12,11 @@ class StadiumData : public DatabaseContainer<Stadium, StadiumModel>
 public:
     // Constructor
     StadiumData();
+
+private:
+    // Sort data
+    void sortData();
+    static bool sortMethod(const Stadium &a, const Stadium &b);
 };
 
 #endif // STADIUM_DATA_H

@@ -19,9 +19,10 @@ public:
     Model(QVector<T> &vect, const qint16 &columnCount, const qint8 &tableId, QObject *parent) :
         ModelBaseClassWrapper(tableId, parent)
     {
-        m_Data = &vect;             // Pointer to underlying data
-        m_ColumnCount = columnCount;// Column count
+        m_Data = &vect;              // Pointer to underlying data
+        m_ColumnCount = columnCount; // Column count
     }
+
     // --- Column count --- //
     qint32 columnCount(const QModelIndex &/*parent*/ = QModelIndex()) const Q_DECL_OVERRIDE
     {

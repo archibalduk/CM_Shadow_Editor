@@ -14,7 +14,7 @@ CityModel::CityModel(QObject *parent) :
 // --- Get data --- //
 QVariant CityModel::data(const QModelIndex &index, qint32 role) const
 {
-    if(role == Qt::DisplayRole || role == Qt::EditRole) {
+    if(role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::UserRole) {
 
         const qint32 col = index.column();
 
@@ -27,6 +27,11 @@ QVariant CityModel::data(const QModelIndex &index, qint32 role) const
 
         // Item
         City *i = &(*m_Data)[index.row()];
+
+        // Check for a shadow edit
+        QVariant value = this->shadow(index);
+        if(value.isValid())
+            return value;
 
         switch(col) {
 
@@ -43,7 +48,7 @@ QVariant CityModel::data(const QModelIndex &index, qint32 role) const
             return i->GenderName.get();
 
         case Nation:
-            return i->Nation.get();
+            return i->Nation.get(role);
 
         case Latitude:
             return i->Latitude.get();
@@ -85,7 +90,9 @@ bool CityModel::setData(const QModelIndex &index, const QVariant &value, qint32 
         break;
 
     case Name:
-        //i->Name.set(value);
+        i->Name.set(value);
+        emit dataChanged(this->index(index.row(), DisplayText),
+                         this->index(index.row(), DisplayText));
         break;
 
     case GenderName:
@@ -93,7 +100,7 @@ bool CityModel::setData(const QModelIndex &index, const QVariant &value, qint32 
         break;
 
     case Nation:
-        //i->Nation.set(value);
+        i->Nation.set(value);
         break;
 
     case Latitude:
@@ -111,6 +118,9 @@ bool CityModel::setData(const QModelIndex &index, const QVariant &value, qint32 
     case Weather:
         i->Weather.set(value);
         break;
+
+    default:
+        return false;
     }
 
     emit dataChanged(index, index);
@@ -124,11 +134,11 @@ QVariant CityModel::headerData(qint32 section, Qt::Orientation orientation, qint
     {
         switch(section) {
 
-        case DisplayText: return s_DisplayText;
-        case Id: return s_Id;
-        case Name: return s_Name;
-        case GenderName: return s_GenderName;
-        case Nation: return s_Nation;
+        case DisplayText: return tr("Display Text");
+        case Id: return tr("ID");
+        case Name: return tr("Name");
+        case GenderName: return tr("Gender Name");
+        case Nation: return tr("Nation");
         case Latitude: return tr("Latitude");
         case Longitude: return tr("Longitude");
         case Attraction: return tr("Attraction");

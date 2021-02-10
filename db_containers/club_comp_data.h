@@ -12,6 +12,16 @@ class ClubCompData : public DatabaseContainer<ClubComp, ClubCompModel>
 public:
     // Constructor
     ClubCompData();
+
+    // Domestic/international data
+    void setFirstInternationalItem();
+    void setNextItemsAsDomestic();
+    void setNextItemsAsInternational();
+
+private:
+    // Sort data
+    void sortData();
+    static bool sortMethod(const ClubComp &a, const ClubComp &b);
 };
 
 #endif // CLUB_COMP_DATA_H

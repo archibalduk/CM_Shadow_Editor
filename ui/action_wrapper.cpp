@@ -1,5 +1,8 @@
 #include "action_wrapper.h"
 
+// Qt headers
+#include <QIcon>
+#include <QSettings>
 
 /* ======================== */
 /*      Action Wrapper      */
@@ -19,6 +22,13 @@ ActionWrapper::ActionWrapper(QAction *action, const qint32 &indexMainArea, const
 {
     QObject::connect(m_Action, &QAction::triggered,
                      this, &ActionWrapper::onTrigger);
+
+    // Icon
+    QSettings settings;
+    if(settings.value("show_icons", false).toBool()) {
+        const QIcon icon(QString(":/icons/%1.png").arg(action->text().toLower().replace(" ", "_", Qt::CaseInsensitive)));
+        action->setIcon(icon);
+    }
 }
 
 // --- Destructor --- //

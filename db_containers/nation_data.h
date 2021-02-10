@@ -12,6 +12,10 @@ class NationData : public DatabaseContainer<Nation, NationModel>
 public:
     // Constructor
     NationData();
+
+private:
+    // Sort data
+    void sortData() { return; }
 };
 
 #endif // NATION_DATA_H

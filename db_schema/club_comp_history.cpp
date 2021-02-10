@@ -38,3 +38,14 @@ void ClubCompHistory::write(QDataStream &out)
     ThirdPlaced.write(out);
     Hosts.write(out);
 }
+
+
+/* ================= */
+/*      Get Data     */
+/* ================= */
+
+// --- Parent/owner id --- //
+qint32 ClubCompHistory::getParentId()
+{
+    return Comp.get();
+}

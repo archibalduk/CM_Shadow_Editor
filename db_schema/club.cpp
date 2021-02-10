@@ -1,6 +1,15 @@
 #include "club.h"
 
-Club::Club()
+// --- Static data --- //
+bool Club::s_NextItemIsDomestic = true; // Flags whether the next item to be read/written is domestic or international
+
+/* =============== */
+/*      Clubs      */
+/* =============== */
+
+// --- Default constructor -- //
+Club::Club() :
+    m_IsDomestic(s_NextItemIsDomestic)
 {
 
 }

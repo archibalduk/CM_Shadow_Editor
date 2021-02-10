@@ -20,13 +20,19 @@ PtrNation::PtrNation(const qint32 &id) :
 /*      Get Data      */
 /* ================== */
 
-// --- Get text --- //
-QString PtrNation::getText()
+// --- Get id or text depending on whether UserRole is invoked --- //
+QVariant PtrNation::get(const qint32 &role) const
 {
-    if(!this->isValid())
-        return s_ErrorMessageInvalidId;
+    if(role != Qt::UserRole)
+        return this->getId();
     else
-        return Database::nations.Data[m_Id].getName();
+        return this->getText();
+}
+
+// --- Get text --- //
+QString PtrNation::getText() const
+{
+    return this->getText_Actual(Database::nations.Data);
 }
 
 
@@ -37,13 +43,7 @@ QString PtrNation::getText()
 // --- Check whether the current value is within range --- //
 bool PtrNation::isValid()
 {
-    return(m_Id >= -1 && m_Id < Database::nations.Data.size());
-}
-
-// --- Check whether the chosen value is within range --- //
-bool PtrNation::isValid(const qint32 &id)
-{
-    return(id >= -1 && id < Database::nations.Data.size());
+    return this->isValid_Actual(Database::nations.Data);
 }
 
 
@@ -54,11 +54,11 @@ bool PtrNation::isValid(const qint32 &id)
 // --- Set id --- //
 bool PtrNation::set(const qint32 &id)
 {
-    // Sanity check
-    if(!this->isValid(id))
-        return false;
-    else {
-        m_Id = id;
-        return true;
-    }
+    return this->set_Actual(Database::nations.Data, id);
+}
+
+// --- Set id (QVariant) --- //
+bool PtrNation::set(const QVariant &value)
+{
+    return this->set_Actual(Database::nations.Data, value.toInt());
 }

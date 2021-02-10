@@ -4,6 +4,7 @@
 // Qt headers
 #include <QDataStream>
 #include <QString>
+#include <QVariant>
 
 // --- QString <--> SI String wrapper/interface class --- //
 class String
@@ -21,7 +22,7 @@ public:
     void write(QDataStream &stream, const quint16 &textLength);
 
     // Get data
-    QString get();
+    QString get() const;
     QString getSimpleString();
     bool isEmpty();
     static QString toSimpleString(const QString &text);
@@ -34,6 +35,11 @@ public:
         STANDARD_TEXT_LENGTH = 51,
         LONG_TEXT_LENGTH = 101
     };
+
+    // Set data
+    void set(const QString &string);
+    void set(const QVariant &value);
+    void setCapacity(const qint32 &capacity);
 };
 
 #endif // STRING_H

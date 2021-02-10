@@ -39,6 +39,12 @@ qint32 Int::get() const
     return value;
 }
 
+// --- Is a pointer value --- //
+bool Int::isPointer() const
+{
+    return(value >= 0);
+}
+
 // --- Get QVariant --- //
 const QVariant Int::variant() const
 {
@@ -50,8 +56,20 @@ const QVariant Int::variant() const
 /*      Set Data      */
 /* ================== */
 
+// --- Copy value from another Int item --- //
+void Int::copy(const Int &data)
+{
+    value = data.value;
+}
+
 // --- Set from QVariant --- //
 void Int::set(const QVariant &data)
 {
     value = data.toInt();
+}
+
+// --- Set from an integer --- //
+void Int::set(const qint32 &i)
+{
+    value = i;
 }

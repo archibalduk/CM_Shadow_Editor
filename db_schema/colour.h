@@ -2,6 +2,7 @@
 #define COLOUR_H
 
 // Qt headers
+#include <QColor>
 #include <QDataStream>
 
 // Application headers
@@ -30,6 +31,9 @@ public:
     // File I/O
     void read(QDataStream &in);
     void write(QDataStream &out);
+
+    // Get data
+    QColor getColour();
 };
 
 #endif // COLOUR_H

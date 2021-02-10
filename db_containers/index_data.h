@@ -18,6 +18,7 @@ public:
 
     // File I/O
     qint32 read(QDataStream &in, Version &version, const qint32 &/*count*/);
+    qint32 write(QDataStream &out, const bool &/*domestic*/);
 
     // Index header
     enum ENUM_HEADER_SIZE { INDEX_HEADER_SIZE = 8 };
@@ -49,9 +50,16 @@ public:
         INDEX_TABLE_COUNT
     };
 
+    // Set data
+    void setCount(const qint32 &tableId, const qint32 &count, const qint32 &offset = 0);
+
 private:
     // Index header
-    qint8 s_Header[INDEX_HEADER_SIZE];
+    QByteArray m_Header;
+
+private:
+    // Sort data
+    void sortData() { return; }
 
     // Version
     qint32 findHighestVersion();

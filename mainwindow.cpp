@@ -87,22 +87,26 @@ void MainWindow::setUserInterface()
     m_MainUserInterface = new MainUi(this);
 
     // Action: Open database
-    m_ActOpenDatabase = new QAction("Open Database", m_MainUserInterface);
+    m_ActOpenDatabase = new QAction("&Open", m_MainUserInterface);
     m_MainUserInterface->addButton(m_ActOpenDatabase, MainUi::ACTIVE_WHEN_DB_IS_CLOSED);
     QObject::connect(m_ActOpenDatabase, &QAction::triggered,
                      this, &MainWindow::openDatabase);
 
     // Action: Save database
-    m_ActSaveDatabase = new QAction("Save Database", m_MainUserInterface);
+    m_ActSaveDatabase = new QAction("&Save", m_MainUserInterface);
     m_MainUserInterface->addButton(m_ActSaveDatabase, MainUi::ACTIVE_WHEN_DB_IS_OPEN);
     QObject::connect(m_ActSaveDatabase, &QAction::triggered,
                      this, &MainWindow::saveDatabase);
 
     // Action: Save as database
-    m_ActSaveAsDatabase = new QAction("Save Database As", m_MainUserInterface);
+    m_ActSaveAsDatabase = new QAction("Save &As", m_MainUserInterface);
     m_MainUserInterface->addButton(m_ActSaveAsDatabase, MainUi::ACTIVE_WHEN_DB_IS_OPEN);
     QObject::connect(m_ActSaveAsDatabase, &QAction::triggered,
                      this, &MainWindow::saveAsDatabase);
+
+    // Settings menu
+    m_Settings = new Settings(this);
+    m_MainUserInterface->addMenu(m_Settings);
 
     // Shadow editor
     m_ShadowEditor = new Editor(m_MainUserInterface);

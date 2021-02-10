@@ -8,7 +8,8 @@
 // --- Default constructor --- //
 Official::Official()
 {
-
+    FirstNameText.setCapacity(String::STANDARD_TEXT_LENGTH);
+    SecondNameText.setCapacity(String::STANDARD_TEXT_LENGTH);
 }
 
 
@@ -20,8 +21,8 @@ Official::Official()
 void Official::read(QDataStream &in)
 {
     ID.read(in);
-    FirstName.read(in);
-    SecondName.read(in);
+    FirstNameId.read(in);
+    SecondNameId.read(in);
     DateOfBirth.read(in);
     YearOfBirth.read(in);
     Nation.read(in);
@@ -36,14 +37,19 @@ void Official::read(QDataStream &in)
     Refereeing.read(in);
     RunningLine.read(in);
     Timekeeping.read(in);
+
+    // Set data
+    this->setDisplayText();
+    this->setNameCache();
+    this->setIdentifier();
 }
 
 // --- Write data --- //
 void Official::write(QDataStream &out)
 {
     ID.write(out);
-    FirstName.write(out);
-    SecondName.write(out);
+    FirstNameId.write(out);
+    SecondNameId.write(out);
     DateOfBirth.write(out);
     YearOfBirth.write(out);
     Nation.write(out);
@@ -58,4 +64,31 @@ void Official::write(QDataStream &out)
     Refereeing.write(out);
     RunningLine.write(out);
     Timekeeping.write(out);
+}
+
+
+/* ================== */
+/*      Set Data      */
+/* ================== */
+
+// --- Display text --- //
+void Official::setDisplayText()
+{
+    // For performance reasons, it is much quicker to set the Display Text rather than to generate it dynamically
+    m_DisplayText = QString("%1, %2").arg(SecondNameText.get()).arg(FirstNameText.get());
+}
+
+// --- Identifier --- //
+void Official::setIdentifier()
+{
+    // This should be set when the record is initially created and then left as is because it will then be used to track all edits
+    // regardless of what changes might be made to the person's name or date of birth
+    m_Identifier = QString("%1 %2").arg(FirstNameText.get()).arg(SecondNameText.get());
+}
+
+// --- Cache names --- //
+void Official::setNameCache()
+{
+    FirstNameText.set(FirstNameId.getText());
+    SecondNameText.set(SecondNameId.getText());
 }

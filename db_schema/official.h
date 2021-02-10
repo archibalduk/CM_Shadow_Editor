@@ -18,8 +18,16 @@
 class Official : public SchemaBaseClass
 {
 private:
-    PtrFirstName FirstName;
-    PtrSecondName SecondName;
+    // Extra data
+    QString m_DisplayText;
+
+    // Name strings
+    String FirstNameText;
+    String SecondNameText;
+
+    // Database data
+    PtrFirstName FirstNameId;
+    PtrSecondName SecondNameId;
     Date DateOfBirth;
     Short YearOfBirth;
     Int Nation;
@@ -38,6 +46,11 @@ private:
     // Friend classes
     friend class OfficialData;
     friend class OfficialModel;
+
+    // Set data
+    void setDisplayText();
+    void setIdentifier();
+    void setNameCache();
 
 public:
     // Constructor

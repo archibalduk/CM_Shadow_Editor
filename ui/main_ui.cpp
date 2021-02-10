@@ -3,6 +3,7 @@
 // Qt headers
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QToolButton>
 
 /* ============================= */
 /*      Main User Interface      */
@@ -53,6 +54,16 @@ void MainUi::addButton(QAction *action, const qint8 &behaviour)
 {
     m_Toolbar->addAction(action);
     this->initBehaviour(action, behaviour);
+}
+
+// --- Add menu --- //
+void MainUi::addMenu(QMenu *menu)
+{
+    QToolButton* toolButton = new QToolButton(m_Toolbar);
+    toolButton->setText(menu->title());
+    toolButton->setMenu(menu);
+    toolButton->setPopupMode(QToolButton::InstantPopup);
+    m_Toolbar->addWidget(toolButton);
 }
 
 // --- Add widget with associated action --- //

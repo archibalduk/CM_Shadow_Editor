@@ -12,7 +12,10 @@ GroupWidget::GroupWidget(const QString &title, QWidget *parent, const qint32 &li
     m_Row(0),
     m_Limit(limit)
 {
+    // Layout
     m_Layout = new QGridLayout(this);
+    m_Layout->setRowStretch(limit, 10);
+    m_Layout->setContentsMargins(0, 0, 0, 0);
     this->setLayout(m_Layout);
 }
 

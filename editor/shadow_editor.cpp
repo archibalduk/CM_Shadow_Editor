@@ -11,7 +11,7 @@
 
 // --- Default constructor --- //
 ShadowEditor::ShadowEditor(MainUi *ui) :
-    EditorUi("Shadow Viewer", ui, ShadowManager::proxy(), ShadowGroupModel::DisplayText)
+    EditorUi("Shadow Viewer", ui, ShadowManager::proxy(), nullptr, ShadowGroupModel::DisplayText)
 {
     // Initialise the screens
     this->initScreenBasicData();
@@ -32,16 +32,17 @@ void ShadowEditor::initScreenBasicData()
 
     // Model
     m_ShadowEditItemModel = new ShadowEditItemModel(this);
-
+/*
     // Proxy
     m_ShadowEditItemProxy = new QSortFilterProxyModel(m_ShadowEditItemModel);
     m_ShadowEditItemProxy->setSourceModel(m_ShadowEditItemModel);
     m_ShadowEditItemProxy->setFilterKeyColumn(ShadowEditItemModel::TableId);
     m_ShadowEditItemProxy->setSortRole(Qt::AscendingOrder);
-
+*/
     // Shadow Group Edits table
     m_GroupEditsTable = new TableWidget(this);
-    m_GroupEditsTable->setSourceModel(m_ShadowEditItemProxy);
+//    m_GroupEditsTable->setSourceModel(m_ShadowEditItemProxy);
+    m_GroupEditsTable->setSourceModel(m_ShadowEditItemModel);
 
     // Connect the mapper to the model
     QObject::connect(m_Mapper, &QDataWidgetMapper::currentIndexChanged,
@@ -58,10 +59,14 @@ void ShadowEditor::initScreenBasicData()
 /* =============== */
 /*      Slots      */
 /* =============== */
-
+#include <QDebug>
 // --- Index change --- //
-void ShadowEditor::onIndexChange(const int &/*index*/)
+void ShadowEditor::onIndexChange(const int &index)
 {
+    qDebug() << QString("Mapper: %1 | ").arg(index)
+             << QString("Nav list: %1 | ").arg(m_NavigationList->currentIndex().row())
+             << QString("To source: %1 | ").arg(m_Proxy->mapToSource(m_NavigationList->currentIndex()).row());
+
     const qint32 row = m_Proxy->mapToSource(m_NavigationList->currentIndex()).row();
     m_ShadowEditItemModel->setSourceData(ShadowManager::model()->editItems(row));
 }

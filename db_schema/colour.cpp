@@ -24,6 +24,9 @@ void Colour::read(QDataStream &in)
     RedIntensity.read(in);
     GreenIntensity.read(in);
     BlueIntensity.read(in);
+
+    // Set data
+    this->setIdentifier(Name.get());
 }
 
 // --- Write data --- //
@@ -34,4 +37,15 @@ void Colour::write(QDataStream &out)
     RedIntensity.write(out);
     GreenIntensity.write(out);
     BlueIntensity.write(out);
+}
+
+
+/* ================== */
+/*      Get Data      */
+/* ================== */
+
+// --- Get QColor --- //
+QColor Colour::getColour()
+{
+    return QColor(RedIntensity.get(), GreenIntensity.get(), BlueIntensity.get());
 }

@@ -38,3 +38,14 @@ void StaffHistory::write(QDataStream &out)
     Apps.write(out);
     Goals.write(out);
 }
+
+
+/* ================= */
+/*      Get Data     */
+/* ================= */
+
+// --- Parent/owner id --- //
+qint32 StaffHistory::getParentId()
+{
+    return Staff.get();
+}

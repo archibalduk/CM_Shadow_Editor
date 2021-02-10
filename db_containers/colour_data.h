@@ -11,6 +11,10 @@ class ColourData : public DatabaseContainer<Colour, ColourModel>
 {
 public:
     ColourData();
+
+private:
+    // Sort data
+    void sortData() { return; }
 };
 
 #endif // COLOUR_DATA_H

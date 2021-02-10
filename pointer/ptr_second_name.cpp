@@ -20,13 +20,19 @@ PtrSecondName::PtrSecondName(const qint32 &id) :
 /*      Get Data      */
 /* ================== */
 
-// --- Get text --- //
-QString PtrSecondName::getText()
+// --- Get id or text depending on whether UserRole is invoked --- //
+QVariant PtrSecondName::get(const qint32 &role) const
 {
-    if(!this->isValid())
-        return s_ErrorMessageInvalidId;
+    if(role != Qt::UserRole)
+        return this->getId();
     else
-        return Database::secondNames.Data[m_Id].getName();
+        return this->getText();
+}
+
+// --- Get text --- //
+QString PtrSecondName::getText() const
+{
+    return this->getText_Actual(Database::secondNames.Data);
 }
 
 
@@ -37,13 +43,7 @@ QString PtrSecondName::getText()
 // --- Check whether the current value is within range --- //
 bool PtrSecondName::isValid()
 {
-    return(m_Id >= -1 && m_Id < Database::secondNames.Data.size());
-}
-
-// --- Check whether the chosen value is within range --- //
-bool PtrSecondName::isValid(const qint32 &id)
-{
-    return(id >= -1 && id < Database::secondNames.Data.size());
+    return this->isValid_Actual(Database::secondNames.Data);
 }
 
 
@@ -51,14 +51,14 @@ bool PtrSecondName::isValid(const qint32 &id)
 /*      Set Data      */
 /* ================== */
 
-// --- Set id --- //
+// --- Set id (integer) --- //
 bool PtrSecondName::set(const qint32 &id)
 {
-    // Sanity check
-    if(!this->isValid(id))
-        return false;
-    else {
-        m_Id = id;
-        return true;
-    }
+    return this->set_Actual(Database::secondNames.Data, id);
+}
+
+// --- Set id (QVariant) --- //
+bool PtrSecondName::set(const QVariant &value)
+{
+    return this->set_Actual(Database::secondNames.Data, value.toInt());
 }

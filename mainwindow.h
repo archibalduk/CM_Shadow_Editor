@@ -6,6 +6,7 @@
 #include <QMainWindow>
 
 // Application headers
+#include "core/settings.h"
 #include "db_modules/database.h"
 #include "editor/editor.h"
 #include "ui/main_ui.h"
@@ -26,6 +27,9 @@ private:
 
     // Editor
     Editor *m_ShadowEditor;
+
+    // Settings
+    Settings *m_Settings;
 
     // User interface
     MainUi *m_MainUserInterface;

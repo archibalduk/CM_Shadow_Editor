@@ -9,6 +9,7 @@
 
 // Shadow editors
 #include "../editor/editor_city.h"
+#include "../editor/editor_colour.h"
 #include "../editor/editor_staff.h"
 #include "../editor/shadow_editor.h"
 
@@ -21,6 +22,7 @@ private:
 
     // Editors
     EditorCity *m_EditorCity;
+    EditorColour *m_EditorColour;
     EditorStaff *m_EditorStaff;
 
     // Shadow editor/viewer

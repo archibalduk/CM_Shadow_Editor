@@ -12,6 +12,11 @@ class OfficialData : public DatabaseContainer<Official, OfficialModel>
 public:
     // Constructor
     OfficialData();
+
+private:
+    // Sort data
+    void sortData();
+    static bool sortMethod(const Official &a, const Official &b);
 };
 
 #endif // OFFICIAL_DATA_H

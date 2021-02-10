@@ -15,6 +15,8 @@ class ModelBaseClassWrapper : public QAbstractTableModel
 {
     Q_OBJECT
 
+    // NOTE: Avoid adding static data members as this appears to cause memory access violation crashes when running in a debug build
+
 protected:
     // Column count
     qint32 m_ColumnCount;
@@ -26,13 +28,6 @@ protected:
     // Get data
     bool checkRow(const QModelIndex &index) const;
     QString getIdentifierString(const QModelIndex &index) const;
-
-    // Common text strings
-    static const QString s_DisplayText;
-    static const QString s_GenderName;
-    static const QString s_Id;
-    static const QString s_Name;
-    static const QString s_Nation;
 
     // Validate data
     QVariant shadow(const QModelIndex &index) const;
@@ -60,6 +55,11 @@ public:
         Identifier,
         Id,
         FIRST_ITEM  // Used for the first item enum value in sub-classes
+    };
+
+    // --- Flags --- //
+    enum ENUM_FLAGS {
+        SpreadsheetRole = Qt::UserRole
     };
 };
 
